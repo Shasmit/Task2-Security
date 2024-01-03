@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import zxcvbn from "zxcvbn";
 import Bg from "../assets/images/bg2.jpg";
 import Logo from "../assets/images/filmcratebg.png";
 import Button from "../components/common/Button";
@@ -12,11 +13,22 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
   const handleSignup = (e) => {
     e.preventDefault();
 
     setError(""); // Reset the error state before making the API call
+
+    // Assess password strength
+    const passwordScore = zxcvbn(password);
+    setPasswordStrength(passwordScore.score);
+
+    // Check if password meets complexity requirements
+    if (passwordScore.score < 2) {
+      setError("Password is too weak. Please choose a stronger password.");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -51,14 +63,53 @@ export default function Register() {
       });
   };
 
+  const getPasswordStrengthLabel = (score) => {
+    switch (score) {
+      case 0:
+        return "Very Weak";
+      case 1:
+        return "Weak";
+      case 2:
+        return "Moderate";
+      case 3:
+        return "Strong";
+      case 4:
+        return "Very Strong";
+      default:
+        return "";
+    }
+  };
+
+  const getPasswordStrengthColor = (score) => {
+    switch (score) {
+      case 0:
+        return "red";
+      case 1:
+        return "orange";
+      case 2:
+        return "yellow";
+      case 3:
+        return "green";
+      case 4:
+        return "dark-green";
+      default:
+        return "";
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    // Update password state
+    setPassword(e.target.value);
+
+    // Assess password strength on each input change
+    const passwordScore = zxcvbn(e.target.value);
+    setPasswordStrength(passwordScore.score);
+  };
+
   return (
     <section className="min-h-screen flex flex-col md:flex-row bg-[#F6F7D3]">
       <div className="bg-[#F6F7D3] hidden lg:block w-full md:w-1/2 xl:w-2/3">
-        <img
-          src={Bg}
-          alt="background"
-          className="w-full h-full object-cover"
-        />
+        <img src={Bg} alt="background" className="w-full h-full object-cover" />
       </div>
       <div className="bg-[#F6F7D3] w-full md:max-w-md lg:max-w-full md:mx-auto md:w-1/2 px-6 lg:px-16 xl:px-12 flex items-center justify-center my-4">
         <div className="w-full h-100">
@@ -107,8 +158,23 @@ export default function Register() {
                 minLength="6"
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
               />
+
+              {
+              password.length > 0              
+              && (
+                <div className="text-sm text-gray-500">
+                  Password Strength:{" "}
+                  <span
+                    className={`text-${getPasswordStrengthColor(
+                      passwordStrength
+                    )}`}
+                  >
+                    {getPasswordStrengthLabel(passwordStrength)}
+                  </span>
+                </div>
+              )}
             </div>
             <div className="mt-2">
               <label className="block text-[#305973] text-3xl texts">
@@ -125,7 +191,9 @@ export default function Register() {
             </div>
 
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            {message && <p className="text-green-500 text-sm mt-2">{message}</p>}
+            {message && (
+              <p className="text-green-500 text-sm mt-2">{message}</p>
+            )}
 
             <Button text="REGISTER" onClick={handleSignup} />
           </form>

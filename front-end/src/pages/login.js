@@ -27,17 +27,6 @@ export default function Login() {
   const handleSignin = (e) => {
     e.preventDefault();
 
-    // Perform form validation
-    if (username.trim() === "") {
-      setError("Username is required");
-      return;
-    }
-
-    if (password.trim() === "") {
-      setError("Password is required");
-      return;
-    }
-
     // Reset the error state before making the API call
     setError("");
 
@@ -53,19 +42,12 @@ export default function Login() {
         window.location.href = "/movies";
       })
       .catch((err) => {
-        if (err.response) {
-          // Check the error message from the server
-          if (err.response.data.error === "User not found") {
-            setError("Invalid username");
-          } else if (err.response.data.error === "Invalid password") {
-            setError("Invalid password");
-          } else {
-            setError("An error occurred. Please try again later.");
-          }
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.error) {
+          setError(err.response.data.error);
         } else {
           setError("An error occurred. Please try again later.");
         }
-        // setIsLoading(false); // Set isLoading to false after the API call is completed
       });
   };
 

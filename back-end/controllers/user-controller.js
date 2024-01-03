@@ -23,13 +23,14 @@ const registerUser = (req, res, next) => {
   if (!passwordRegex.test(password)) {
     return res
       .status(400)
-      .json({ error: "Password must include combination of: Uppercase letters, Lowercase letters, Numbers, Special characters (e.g.,!, @, #, $)" });
+      .json({
+        error:
+          "Password must include combination of: Uppercase letters, Lowercase letters, Numbers, Special characters (e.g.,!, @, #, $)",
+      });
   }
 
   const minPasswordLength = 8;
-  if (
-    password.length < minPasswordLength
-  ) {
+  if (password.length < minPasswordLength) {
     return res.status(400).json({
       error: `Password length must be at least ${minPasswordLength} characters`,
     });
@@ -61,41 +62,90 @@ const registerUser = (req, res, next) => {
     .catch(next);
 };
 
-
-const loginUser = (req, res, next) => {
+const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
-  User.findOne({ username })
-    .then((user) => {
-      if (!user) {
-        return res.status(400).json({ error: "User not found" });
+
+  // Check if username or password is missing
+  if (!username || !password) {
+    return res.status(400).json({ error: "Please fill in all fields" });
+  }
+
+  try {
+    const user = await User.findOne({ username });
+
+    // Check if user is not found
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    // Check if the account is locked
+    if (user.accountLocked) {
+      // Check if it's time to unlock the account
+      const lockoutDurationMillis = Date.now() - user.lastFailedLoginAttempt;
+      const lockoutDurationMinutes = lockoutDurationMillis / (60 * 1000); // convert to minutes
+
+      if (lockoutDurationMinutes >= 2) {
+        // Unlock the account
+        user.accountLocked = false;
+        user.failedLoginAttempts = 0;
+        await user.save();
+      } else {
+        return res.status(400).json({ error: "Account is locked. Please try again later." });
       }
-      bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-        if (!isMatch) {
-          return res.status(400).json({ error: "Invalid password" });
-        }
-        const payload = {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-        };
-        jwt.sign(
-          payload,
-          process.env.SECRET,
-          { expiresIn: "1d" },
-          (err, token) => {
-            if (err) {
-              return res.status(500).json({ error: err.message });
-            }
-            res.json({ status: "success", token: token });
-          }
-        );
-      });
-    })
-    .catch(next);
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      // Increment failed login attempts and update last failed login timestamp
+      user.failedLoginAttempts += 1;
+      user.lastFailedLoginAttempt = Date.now();
+
+      // Check if the maximum allowed failed attempts is reached
+      if (user.failedLoginAttempts >= 4) {
+        // Lock the account
+        user.accountLocked = true;
+        await user.save();
+        return res.status(400).json({ error: "Account is locked. Please try again later." });
+      }
+
+      // Save the updated user data
+      await user.save();
+
+      return res.status(400).json({ error: "Invalid password" });
+    }
+
+    // Reset failed login attempts and last failed login timestamp on successful login
+    user.failedLoginAttempts = 0;
+    user.lastFailedLoginAttempt = null;
+    await user.save();
+
+    // Check if the account is still locked after successful login
+    if (user.accountLocked) {
+      return res.status(400).json({ error: "Account is locked. Please try again later." });
+    }
+
+    // If everything is fine, generate and send the JWT token
+    const payload = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    };
+
+    jwt.sign(payload, process.env.SECRET, { expiresIn: "1d" }, (err, token) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ status: "success", token: token });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred. Please try again later." });
+  }
 };
+
+
+
 
 const getUserProfile = async (req, res, next) => {
   try {

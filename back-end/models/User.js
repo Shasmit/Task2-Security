@@ -35,7 +35,19 @@ const userSchema = new Schema({
     totalMoviesReviewed: {
         type: Number,
         default: 0
-    }
+    },
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
+    },
+    accountLocked: {
+      type: Boolean,
+      default: false,
+    },
+    lastFailedLoginAttempt: {
+      type: Date,
+      default: null,
+    },
 });
 
   // Sign JWT and return
