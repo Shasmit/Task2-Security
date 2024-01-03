@@ -5,6 +5,36 @@ const User = require("../models/User");
 
 const registerUser = (req, res, next) => {
   const { username, password, email, confirmPassword } = req.body;
+
+  // Check if all required fields are filled
+  if (!username || !password || !email || !confirmPassword) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  // Email Validation: Check if the email is in a valid format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
+  // Password Complexity: Require passwords to include a combination of Uppercase letters, Lowercase letters, Numbers, Special characters
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+  if (!passwordRegex.test(password)) {
+    return res
+      .status(400)
+      .json({ error: "Password must include combination of: Uppercase letters, Lowercase letters, Numbers, Special characters (e.g.,!, @, #, $)" });
+  }
+
+  const minPasswordLength = 8;
+  if (
+    password.length < minPasswordLength
+  ) {
+    return res.status(400).json({
+      error: `Password length must be at least ${minPasswordLength} characters`,
+    });
+  }
+
   User.findOne({ $or: [{ username }, { email }] })
     .then((user) => {
       if (user) {
@@ -30,6 +60,7 @@ const registerUser = (req, res, next) => {
     })
     .catch(next);
 };
+
 
 const loginUser = (req, res, next) => {
   const { username, password } = req.body;
@@ -84,7 +115,6 @@ const getUserProfile = async (req, res, next) => {
     };
 
     res.json({ user: [userWithLoggedInField] });
-
 
     // res.json({user : [user]});
   } catch (error) {
@@ -199,7 +229,6 @@ const updateUserProfile = async (req, res, next) => {
     next(error);
   }
 };
-
 
 module.exports = {
   registerUser,

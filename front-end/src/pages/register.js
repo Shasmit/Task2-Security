@@ -18,27 +18,6 @@ export default function Register() {
 
     setError(""); // Reset the error state before making the API call
 
-    // Perform form validation
-    if (username.trim() === "") {
-      setError("Username is required");
-      return;
-    }
-
-    if (email.trim() === "") {
-      setError("Email is required");
-      return;
-    }
-
-    if (password.trim() === "") {
-      setError("Password is required");
-      return;
-    }
-
-    if (confirmPassword.trim() === "") {
-      setError("Please confirm your password");
-      return;
-    }
-
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -145,8 +124,8 @@ export default function Register() {
               />
             </div>
 
-            {error && <p className="text-red-500 text-xl mt-2">{error}</p>}
-            {message && <p className="text-green-500 text-xl mt-2">{message}</p>}
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {message && <p className="text-green-500 text-sm mt-2">{message}</p>}
 
             <Button text="REGISTER" onClick={handleSignup} />
           </form>
