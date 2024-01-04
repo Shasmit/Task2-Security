@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useContext, useState } from "react";
+import { FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Bg from "../assets/images/bg2.jpg";
 import Logo from "../assets/images/filmcratebg.png";
@@ -9,7 +10,7 @@ import { UserContext } from "../context/UserContext";
 
 export default function Login() {
   const { setUser, isLoading, setIsLoading } = useContext(UserContext);
-  // const [user, setUser] = useState(null); 
+  // const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -39,7 +40,7 @@ export default function Login() {
         const user = response.data.user;
         setUser(user);
         // setIsLoading(false); // Set isLoading to false after the API call is completed
-        window.location.href = "/movies";
+        window.location.href = "/";
       })
       .catch((err) => {
         console.log(err);
@@ -105,7 +106,9 @@ export default function Login() {
                 onChange={handlePasswordChange}
               />
             </div>
-            {error && <p className="text-red-500 text-lg mt-3 moviefonts">{error}</p>}
+            {error && (
+              <p className="text-red-500 text-lg mt-3 moviefonts">{error}</p>
+            )}
 
             {/* <div className="text-right mt-2">
               <a href="#" className="text-2xl font-medium text-[#305973] texts">
@@ -114,6 +117,15 @@ export default function Login() {
             </div> */}
 
             <Button text="LOGIN" onClick={handleSignin} />
+
+            <button className="w-full px-4 py-3 bg-red-500 rounded-lg font-medium text-white flex items-center justify-center gap-2 mt-4" onClick={
+              () => {
+                navigate("/");
+              }
+            }>
+              <FaUser className="text-xl" />
+              <span>Continue as Guest</span>
+            </button>
           </form>
 
           <hr className="my-6 border-[#305973]  w-full"></hr>

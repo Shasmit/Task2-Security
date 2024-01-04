@@ -9,8 +9,8 @@ const verifyUser = (req, res, next) => {
     if (err) return res.status(401).json({ error: err.message });
     req.user = payload;
     console.log(req.user);
+    next();
   });
-  next();
 };
 
 module.exports = { verifyUser };

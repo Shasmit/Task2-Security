@@ -1,15 +1,20 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { UserContext } from "../../context/UserContext";
 import "./otherStyles.css";
 
 export const TopRatedMoviesBody = ({setActiveTab, setMovie}) => {
   const [slidesPerView, setSlidesPerView] = useState(6);
   const [hoveredSlide, setHoveredSlide] = useState(null);
+  const {user} = useContext(UserContext)
+
+  const navigate = useNavigate();
 
   // const handleMovieDetailsClick = () => {
   //   setActiveTab("movie details");
@@ -20,9 +25,6 @@ export const TopRatedMoviesBody = ({setActiveTab, setMovie}) => {
   useEffect(() => {
     axios
       .get("http://localhost:3001/movies/top_rated/", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
       })
       .then((response) => {
         setTopRatedMovies(response.data.results);
@@ -81,8 +83,12 @@ export const TopRatedMoviesBody = ({setActiveTab, setMovie}) => {
             onMouseLeave={handleSlideMouseLeave}
             onClick={
               () => {
-                setActiveTab("movie details");
+                if (user) {
+                  setActiveTab("movie details");
                 setMovie(topRatedMovie);
+                } else {
+                  navigate('/please-login')
+                }
               }
             }
           >

@@ -1,11 +1,16 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import Search from "../../assets/images/search.gif";
+import { UserContext } from "../../context/UserContext";
 
 export const SearchBody = ({setActiveTab, setMovie}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const {user} = useContext(UserContext)
+
+  const navigate = useNavigate();
 
   const handleSearch = async (event) => {
     const query = event.target.value;
@@ -52,8 +57,12 @@ export const SearchBody = ({setActiveTab, setMovie}) => {
                   key={index}
                   className="cursor-pointer flex items-center gap-3 w-full h-[100px] bg-white p-6 rounded-xl mb-2"
                   onClick={() => {
-                    setActiveTab("movie details");
+                    if (user) {
+                      setActiveTab("movie details");
                     setMovie(result);
+                    } else {
+                      navigate("/please-login");
+                    }
                   }}
                 >
                   <div className="mr-2">

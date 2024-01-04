@@ -6,7 +6,7 @@ const baseURLForImage = "https://image.tmdb.org/t/p/w500";
 const apiKey = process.env.API_KEY;
 
 // Controller to get trending movies
-const getTrendingMovies = async (req, res) => {
+const getTrendingMovies = async (req, res, next) => {
   try {
     const response = await axios.get(
       `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`
@@ -18,7 +18,7 @@ const getTrendingMovies = async (req, res) => {
 };
 
 // Controller to get popular movies
-const getPopularMovies = async (req, res) => {
+const getPopularMovies = async (req, res, next) => {
   try {
     const response = await axios.get(
       `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`
@@ -30,7 +30,7 @@ const getPopularMovies = async (req, res) => {
 };
 
 // Controller to get top rated movies
-const getTopRatedMovies = async (req, res) => {
+const getTopRatedMovies = async (req, res, next) => {
   try {
     const response = await axios.get(
       `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}`
@@ -42,6 +42,7 @@ const getTopRatedMovies = async (req, res) => {
 };
 
 const getMovieDetails = async (req, res) => {
+  console.log(req.user);
   try {
     const userID = req.user ? req.user.id : null;
     const movieID = req.params.id;
@@ -123,6 +124,7 @@ const getMovieDetails = async (req, res) => {
     });
   } catch (error) {
     res.json({ error: error.message });
+    return;
   }
 };
 
@@ -137,9 +139,9 @@ const searchMoviesByName = async (req, res) => {
     res.json(response.data);
   } catch (err) {
     res.json({ error: err.message });
+    return;
   }
 };
-
 
 module.exports = {
   getTrendingMovies,

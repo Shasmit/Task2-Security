@@ -32,6 +32,8 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
       });
   }, [movie.id, isWatchlisted]);
 
+  console.log(movieDetails)
+
   // Function to handle adding/removing from watchlist
   const handleWatchlistToggle = async () => {
     try {

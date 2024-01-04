@@ -1,11 +1,16 @@
 import axios from "axios";
-import { React, useEffect, useState } from "react";
+import { React, useContext, useEffect, useState } from "react";
 import { BiBookmark, BiCameraMovie, BiSearchAlt } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/filmcratebg.png";
+import { UserContext } from "../../context/UserContext";
 
 
 export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange }) {
   const [userProfile, setUserProfile] = useState({});
+  const {user} = useContext(UserContext)
+
+  const navigate = useNavigate()
   
   useEffect(() => {
     axios
@@ -107,7 +112,13 @@ export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange 
           </ul>
         </nav>
 
-        <div className="cursor-pointer absolute bottom-5 px-3 flex items-center gap-3 profilefonts text-[#305973]" onClick={() => onTabChange("profile")}> 
+        <div className="cursor-pointer absolute bottom-5 px-3 flex items-center gap-3 profilefonts text-[#305973]" onClick={() => {
+          if (user) {
+            onTabChange("profile")
+          } else {
+            navigate('/please-login')
+          }
+        }}> 
           <img
             src={
               userProfile?.user?.[0]?.image == null
@@ -119,8 +130,16 @@ export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange 
           />
 
           <div>
-            <h1 className="font-semibold">{userProfile?.user?.[0]?.username}</h1>
+            {
+              userProfile?.user ? (
+                <>
+                <h1 className="font-semibold">{userProfile?.user?.[0]?.username}</h1>
             <p className="text-sm truncate max-w-[160px]">{userProfile?.user?.[0]?.email}</p>
+                </>
+              ) : (
+                <h1 className="font-semibold">Guest User</h1>
+              )
+            }
           </div>
         </div>
       </div>

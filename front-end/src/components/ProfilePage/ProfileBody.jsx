@@ -79,7 +79,7 @@ export const ProfileBody = () => {
     localStorage.removeItem("token");
 
     // Navigate the user to the login page
-    window.location.href = "/";
+    window.location.href = "/login";
   };
 
   const handleFileChange = (event) => {

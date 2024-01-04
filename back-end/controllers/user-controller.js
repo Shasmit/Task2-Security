@@ -21,12 +21,10 @@ const registerUser = (req, res, next) => {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
   if (!passwordRegex.test(password)) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "Password must include combination of: Uppercase letters, Lowercase letters, Numbers, Special characters (e.g.,!, @, #, $)",
-      });
+    return res.status(400).json({
+      error:
+        "Password must include combination of: Uppercase letters, Lowercase letters, Numbers, Special characters (e.g.,!, @, #, $)",
+    });
   }
 
   const minPasswordLength = 8;
@@ -90,7 +88,9 @@ const loginUser = async (req, res, next) => {
         user.failedLoginAttempts = 0;
         await user.save();
       } else {
-        return res.status(400).json({ error: "Account is locked. Please try again later." });
+        return res
+          .status(400)
+          .json({ error: "Account is locked. Please try again later." });
       }
     }
 
@@ -106,7 +106,9 @@ const loginUser = async (req, res, next) => {
         // Lock the account
         user.accountLocked = true;
         await user.save();
-        return res.status(400).json({ error: "Account is locked. Please try again later." });
+        return res
+          .status(400)
+          .json({ error: "Account is locked. Please try again later." });
       }
 
       // Save the updated user data
@@ -122,9 +124,24 @@ const loginUser = async (req, res, next) => {
 
     // Check if the account is still locked after successful login
     if (user.accountLocked) {
-      return res.status(400).json({ error: "Account is locked. Please try again later." });
+      return res
+        .status(400)
+        .json({ error: "Account is locked. Please try again later." });
     }
 
+    // If everything is fine, generate and send the JWT token
+    // const payload = {
+    //   id: user._id,
+    //   username: user.username,
+    //   email: user.email,
+    // };
+
+    // jwt.sign(payload, process.env.SECRET, { expiresIn: "1d" }, (err, token) => {
+    //   if (err) {
+    //     return res.status(500).json({ error: err.message });
+    //   }
+    //   res.json({ status: "success", token: token });
+    // });
     // If everything is fine, generate and send the JWT token
     const payload = {
       id: user._id,
@@ -134,39 +151,44 @@ const loginUser = async (req, res, next) => {
 
     jwt.sign(payload, process.env.SECRET, { expiresIn: "1d" }, (err, token) => {
       if (err) {
+        /* istanbul ignore next */
         return res.status(500).json({ error: err.message });
       }
       res.json({ status: "success", token: token });
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "An error occurred. Please try again later." });
+    res
+      .status(500)
+      .json({ error: "An error occurred. Please try again later." });
   }
 };
 
-
-
-
 const getUserProfile = async (req, res, next) => {
   try {
-    const userId = req.user.id;
-
-    const user = await User.findById(userId);
-    if (!user) {
+    if (req.user === undefined || req.user === null) {
       return res.status(404).json({ error: "User not found" });
+    } else {
+      const userId = req.user.id;
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      // Check if the user is logged in and get the logged-in user ID
+      const loggedInUserID = req.user ? req.user.id : null;
+
+      // Add the isUserLoggedIn field to the user object
+      const userWithLoggedInField = {
+        ...user.toObject(),
+        isUserLoggedIn: loggedInUserID === user._id.toString(),
+      };
+
+      res.json({ user: [userWithLoggedInField] });
+
+      // Add the return statement
+      return;
     }
-    // Check if the user is logged in and get the logged-in user ID
-    const loggedInUserID = req.user ? req.user.id : null;
-
-    // Add the isUserLoggedIn field to the user object
-    const userWithLoggedInField = {
-      ...user.toObject(),
-      isUserLoggedIn: loggedInUserID === user._id.toString(),
-    };
-
-    res.json({ user: [userWithLoggedInField] });
-
-    // res.json({user : [user]});
   } catch (error) {
     next(error);
   }
@@ -203,17 +225,36 @@ const updatePassword = async (req, res, next) => {
       });
     }
 
+    // Check if the user's password needs to be expired
+    const passwordChangeDate = user.passwordChangeDate || user.createdAt;
+    const passwordExpiryDays = 90; // Change password every 90 days
+
+    const lastPasswordChange = new Date(passwordChangeDate);
+    const currentDate = new Date();
+
+    const daysSinceLastChange = Math.floor(
+      (currentDate - lastPasswordChange) / (1000 * 60 * 60 * 24)
+    );
+
+    if (daysSinceLastChange > passwordExpiryDays) {
+      return res.status(400).json({
+        error: `Your password has expired. Please change your password.`,
+      });
+    }
+
     // Hash the new password
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update the user's password
+    // Update the user's password and set the new password change date
     user.password = hashedNewPassword;
+    user.passwordChangeDate = currentDate;
 
     // Save the updated user
     await user.save();
 
     res.status(204).json({ message: "Password updated successfully" });
   } catch (error) {
+    /* istanbul ignore next */
     next(error);
   }
 };

@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { UserContext } from "./context/UserContext";
 import AddReviewPage from "./pages/AddReviewPage";
 import AllReviews from './pages/AllReviews';
+import { ErrorPage } from "./pages/ErrorPage";
 import MainPage from "./pages/MainPage";
 import UpdateReviewPage from "./pages/UpdateReviewPage";
 import ChangePassword from "./pages/changePassword";
@@ -15,7 +16,13 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={user ? <MainPage /> : <Login />} />
+        <Route path="/" element={<MainPage /> } />
+      </Routes>
+      <Routes>
+        <Route path="/login" element={<Login /> } />
+      </Routes>
+      <Routes>
+        <Route path="/please-login" element={<ErrorPage /> } />
       </Routes>
       <Routes>
         <Route path="/register" element={user ? <MainPage /> : <Register />} />

@@ -30,7 +30,7 @@ app.use(express.static("public"));
 
 app.use("/users", user_routes);
 
-app.use("/movies", verifyUser, movie_routes);
+app.use("/movies", movie_routes);
 
 app.use("/movies", verifyUser, review_routes);
 
@@ -39,10 +39,14 @@ app.use("/watchlist", verifyUser, watchlist_routes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
+
   if (err.name === "ValidationError") res.status(400);
   else if (err.name === "CastError") res.status(400);
+
   res.json({ error: err.message });
+  return; // Add this line to terminate the function after sending the response
 });
+
 
 // Unknown Path
 app.use((req, res) => {

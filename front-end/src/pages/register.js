@@ -24,12 +24,6 @@ export default function Register() {
     const passwordScore = zxcvbn(password);
     setPasswordStrength(passwordScore.score);
 
-    // Check if password meets complexity requirements
-    if (passwordScore.score < 2) {
-      setError("Password is too weak. Please choose a stronger password.");
-      return;
-    }
-
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;

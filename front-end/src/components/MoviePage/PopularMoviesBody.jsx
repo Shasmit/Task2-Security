@@ -1,10 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { UserContext } from "../../context/UserContext";
 import "./otherStyles.css";
 
 export const PopularMoviesBody = ({setActiveTab, setMovieId, setMovie}) => {
@@ -12,19 +14,18 @@ export const PopularMoviesBody = ({setActiveTab, setMovieId, setMovie}) => {
   const [hoveredSlide, setHoveredSlide] = useState(null);
 
   const [popularMovies, setPopularMovies] = useState([]);
+  const {user} = useContext(UserContext)
 
   // const handleMovieDetailsClick = ({}) => {
   //   setMovieId(popularMovies[hoveredSlide].id);
   //   setActiveTab("movie details");
   // };
+  const navigate = useNavigate()
   
 
   useEffect(() => {
     axios
       .get("http://localhost:3001/movies/popular/", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
       })
       .then((response) => {
         setPopularMovies(response.data.results);
@@ -83,8 +84,12 @@ export const PopularMoviesBody = ({setActiveTab, setMovieId, setMovie}) => {
             onMouseLeave={handleSlideMouseLeave}
             onClick={
               () => {
-                setActiveTab("movie details");
+                if (user) {
+                  setActiveTab("movie details");
                 setMovie(popularMovie);
+                } else {
+                  navigate('/please-login')
+                }
               }
             }
           >
