@@ -20,7 +20,7 @@ function App() {
         <Route path="/" element={<MainPage /> } />
       </Routes>
       <Routes>
-        <Route path="/login" element={<Login /> } />
+        <Route path="/login" element={user ? <MainPage /> : <Login />} />
       </Routes>
       <Routes>
         <Route path="/please-login" element={<ErrorPage /> } />

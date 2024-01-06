@@ -47,6 +47,20 @@ export default function MovieScreen() {
       />
 
       {renderBodyContent()}
+
+      {/* <Routes>
+        <Route path="/" element={<Outlet />}>
+          <Route index element={<MovieBody setActiveTab={handleTabChange}  movieId={movieId} setMovieId={setMovieId} movie={movie} setMovie={setMovie}  />}/>
+
+          <Route path="search" element={<SearchBody setActiveTab={setActiveTab} setMovie={setMovie}/>}/>
+
+          <Route path="watchlist" element={<WatchlistBody setActiveTab={handleTabChange} setMovie={setMovie} />}/>
+
+          <Route path="profile" element={<ProfileBody />}/>
+          
+          <Route path="movieDetails" element={<MovieDetails movieId={movieId} movie={movie} setActiveTab={setActiveTab} setMovie={setMovie} />}/>
+        </Route>
+      </Routes> */}
     </div>
   );
 }

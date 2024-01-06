@@ -86,6 +86,7 @@ export const PopularMoviesBody = ({setActiveTab, setMovieId, setMovie}) => {
               () => {
                 if (user) {
                   setActiveTab("movie details");
+                  navigate('/movieDetails')
                 setMovie(popularMovie);
                 } else {
                   navigate('/please-login')
