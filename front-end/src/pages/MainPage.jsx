@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import Dashboard from "../components/Dashboard/Dashboard";
 import { MovieBody } from "../components/MoviePage/MovieBody";
 import { MovieDetails } from "../components/MoviePage/MovieDetails";
 import { ProfileBody } from "../components/ProfilePage/ProfileBody";
 import { SearchBody } from "../components/SearchPage/SearchBody";
 import { WatchlistBody } from "../components/WatchlistPage/WatchlistBody";
 import Sidebar from "../components/common/Sidebar";
+import { UserContext } from "../context/UserContext";
 
 export default function MovieScreen() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("movies");
   const [movieId, setMovieId] = useState(null);
   const [movie, setMovie] = useState(null);
+  const {user} = useContext(UserContext)
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -32,6 +36,8 @@ export default function MovieScreen() {
         return <ProfileBody />;
       case "movie details":
         return <MovieDetails movieId={movieId} movie={movie} setActiveTab={setActiveTab} setMovie={setMovie} />;
+      case "dashboard":
+        return <Dashboard/>
       default:
         return null;
     }

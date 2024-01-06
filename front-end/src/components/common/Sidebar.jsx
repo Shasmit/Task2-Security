@@ -1,17 +1,27 @@
 import axios from "axios";
 import { React, useContext, useEffect, useState } from "react";
-import { BiBookmark, BiCameraMovie, BiSearchAlt } from "react-icons/bi";
+import {
+  BiBookmark,
+  BiCameraMovie,
+  BiSearchAlt,
+  BiSolidDashboard,
+} from "react-icons/bi";
+
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/filmcratebg.png";
 import { UserContext } from "../../context/UserContext";
 
-
-export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange }) {
+export default function Sidebar({
+  isOpen,
+  toggleSidebar,
+  activeTab,
+  onTabChange,
+}) {
   const [userProfile, setUserProfile] = useState({});
-  const {user} = useContext(UserContext)
+  const { user } = useContext(UserContext);
 
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
     axios
       .get("http://localhost:3001/users", {
@@ -26,7 +36,7 @@ export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange 
         console.log(error);
       });
   }, []);
-  
+
   return (
     <div className="relative">
       {/* Hamburger Button */}
@@ -38,8 +48,16 @@ export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange 
           viewBox="0 0 24 24"
         >
           <path
-            fill={`${activeTab === "movies" || activeTab === "movie details"? "#FFFFFF" : "#305973"}`}
-            stroke={`${activeTab === "movies" || activeTab === "movie details"? "#FFFFFF" : "#305973"}`}
+            fill={`${
+              activeTab === "movies" || activeTab === "movie details"
+                ? "#FFFFFF"
+                : "#305973"
+            }`}
+            stroke={`${
+              activeTab === "movies" || activeTab === "movie details"
+                ? "#FFFFFF"
+                : "#305973"
+            }`}
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="2"
@@ -82,7 +100,7 @@ export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange 
           <ul className="px-3 flex flex-col gap-2">
             <li
               className={`cursor-pointer w-full flex gap-4 justify-start items-center px-4 py-3 text-[#305973] transition duration-400 hover:bg-[#305973] hover:text-white rounded-xl ${
-                activeTab === "movies" ? "bg-[#305973] text-white"  : ""
+                activeTab === "movies" ? "bg-[#305973] text-white" : ""
               }`}
               onClick={() => onTabChange("movies")}
             >
@@ -100,25 +118,42 @@ export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange 
               <p>Search</p>
             </li>
 
-            <li
-              className={`cursor-pointer w-full flex gap-4 justify-start items-center px-4 py-3 text-[#305973] transition duration-400 hover:bg-[#305973] hover:text-white rounded-xl ${
-                activeTab === "watchlist" ? "bg-[#305973] text-white" : ""
-              }`}
-              onClick={() => onTabChange("watchlist")}
-            >
-              <BiBookmark className="w-8 h-8" />
-              <p>Watchlist</p>
-            </li>
+            {user?.user[0].userType !== "admin" && (
+              <li
+                className={`cursor-pointer w-full flex gap-4 justify-start items-center px-4 py-3 text-[#305973] transition duration-400 hover:bg-[#305973] hover:text-white rounded-xl ${
+                  activeTab === "watchlist" ? "bg-[#305973] text-white" : ""
+                }`}
+                onClick={() => onTabChange("watchlist")}
+              >
+                <BiBookmark className="w-8 h-8" />
+                <p>Watchlist</p>
+              </li>
+            )}
+
+            {user?.user[0].userType === "admin" && (
+              <li
+                className={`cursor-pointer w-full flex gap-4 justify-start items-center px-4 py-3 text-[#305973] transition duration-400 hover:bg-[#305973] hover:text-white rounded-xl ${
+                  activeTab === "dashboard" ? "bg-[#305973] text-white" : ""
+                }`}
+                onClick={() => onTabChange("dashboard")}
+              >
+                <BiSolidDashboard className="w-8 h-8" />
+                <p>Dashboard</p>
+              </li>
+            )}
           </ul>
         </nav>
 
-        <div className="cursor-pointer absolute bottom-5 px-3 flex items-center gap-3 profilefonts text-[#305973]" onClick={() => {
-          if (user) {
-            onTabChange("profile")
-          } else {
-            navigate('/please-login')
-          }
-        }}> 
+        <div
+          className="cursor-pointer absolute bottom-5 px-3 flex items-center gap-3 profilefonts text-[#305973]"
+          onClick={() => {
+            if (user) {
+              onTabChange("profile");
+            } else {
+              navigate("/please-login");
+            }
+          }}
+        >
           <img
             src={
               userProfile?.user?.[0]?.image == null
@@ -130,16 +165,18 @@ export default function Sidebar({ isOpen, toggleSidebar, activeTab, onTabChange 
           />
 
           <div>
-            {
-              userProfile?.user ? (
-                <>
-                <h1 className="font-semibold">{userProfile?.user?.[0]?.username}</h1>
-            <p className="text-sm truncate max-w-[160px]">{userProfile?.user?.[0]?.email}</p>
-                </>
-              ) : (
-                <h1 className="font-semibold">Guest User</h1>
-              )
-            }
+            {userProfile?.user ? (
+              <>
+                <h1 className="font-semibold">
+                  {userProfile?.user?.[0]?.username}
+                </h1>
+                <p className="text-sm truncate max-w-[160px]">
+                  {userProfile?.user?.[0]?.email}
+                </p>
+              </>
+            ) : (
+              <h1 className="font-semibold">Guest User</h1>
+            )}
           </div>
         </div>
       </div>

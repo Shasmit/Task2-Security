@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Dashboard from "./components/Dashboard/Dashboard";
 import { UserContext } from "./context/UserContext";
 import AddReviewPage from "./pages/AddReviewPage";
 import AllReviews from './pages/AllReviews';
@@ -45,6 +46,9 @@ function App() {
       </Routes>  
       <Routes>
         <Route path="/forgotPassword" element={<ForgotPassword/>} />
+      </Routes>  
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard/>} />
       </Routes>  
     </Router>
   );

@@ -1,10 +1,11 @@
 import { UploadIcon } from "@radix-ui/react-icons";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoMdLogOut } from "react-icons/io";
 import { MdOutlineChangeCircle } from "react-icons/md";
 import { PiUserSwitchDuotone } from "react-icons/pi";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 
 export const ProfileBody = () => {
   const [userProfile, setUserProfile] = useState({});
@@ -16,6 +17,7 @@ export const ProfileBody = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const fileInputRef = useRef(null);
+  const { user } = useContext(UserContext);
 
   const handleEditClick = () => {
     setEditing(true);
@@ -179,9 +181,15 @@ export const ProfileBody = () => {
                 </>
               ) : (
                 <>
-                  <p className="text-4xl texts">
-                    {userProfile?.user?.[0]?.username}
-                  </p>
+                  <div className="relative flex flex-col items-end">
+                    {
+                      user?.user[0].userType === 'admin' && (<p className="text-3xl rotate-[15deg] absolute -right-6 -top-5">👑</p>)
+                    }
+                    <p className="text-4xl texts flex items-center">
+                      {userProfile?.user?.[0]?.username} {}
+                    </p>
+                  </div>
+
                   <p className="text-2xl texts text-gray-500">
                     {userProfile?.user?.[0]?.email}
                   </p>

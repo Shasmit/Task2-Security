@@ -62,6 +62,12 @@ const userSchema = new Schema({
         required: true,
       },
     ],
+    userType: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+      required: true,
+    },
 });
 
   // Sign JWT and return
