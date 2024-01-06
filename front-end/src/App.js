@@ -7,6 +7,7 @@ import { ErrorPage } from "./pages/ErrorPage";
 import MainPage from "./pages/MainPage";
 import UpdateReviewPage from "./pages/UpdateReviewPage";
 import ChangePassword from "./pages/changePassword";
+import ForgotPassword from "./pages/forgotPassword";
 import Login from "./pages/login";
 import Register from "./pages/register";
 
@@ -41,6 +42,9 @@ function App() {
       </Routes>  
       <Routes>
         <Route path="/changePassword" element={<ChangePassword/>} />
+      </Routes>  
+      <Routes>
+        <Route path="/forgotPassword" element={<ForgotPassword/>} />
       </Routes>  
     </Router>
   );

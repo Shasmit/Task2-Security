@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Bg from "../assets/images/bg2.jpg";
 import Logo from "../assets/images/filmcratebg.png";
 import Button from "../components/common/Button";
@@ -11,6 +12,8 @@ export default function ChangePassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -37,6 +40,8 @@ export default function ChangePassword() {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
+
+      navigate("/");
     } catch (error) {
       setError(error.response.data.error);
     }

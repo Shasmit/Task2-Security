@@ -49,6 +49,15 @@ const registerUser = (req, res, next) => {
           email,
           confirmPassword: hash,
         });
+
+        // Update password history for the newly registered user
+        newUser.passwordHistory.push(hash);
+        // Trim the password history to a specific depth (e.g., last 5 passwords)
+        const passwordHistoryDepth = 5;
+        newUser.passwordHistory = newUser.passwordHistory.slice(
+          -passwordHistoryDepth
+        );
+
         newUser
           .save()
           .then((user) => {
@@ -88,9 +97,9 @@ const loginUser = async (req, res, next) => {
         user.failedLoginAttempts = 0;
         await user.save();
       } else {
-        return res
-          .status(400)
-          .json({ error: "Account is locked. Please try again later." });
+        return res.status(400).json({
+          error: "Account is locked. Please try again later after 2 minutes.",
+        });
       }
     }
 
@@ -208,7 +217,7 @@ const updatePassword = async (req, res, next) => {
     // Compare the current password with the stored hashed password
     const passwordMatch = await bcrypt.compare(currentPassword, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ error: "Incorrect current password" });
+      return res.status(400).json({ error: "Incorrect current password" });
     }
 
     // Check if the new password and confirm password match
@@ -225,20 +234,16 @@ const updatePassword = async (req, res, next) => {
       });
     }
 
-    // Check if the user's password needs to be expired
-    const passwordChangeDate = user.passwordChangeDate || user.createdAt;
-    const passwordExpiryDays = 90; // Change password every 90 days
-
-    const lastPasswordChange = new Date(passwordChangeDate);
-    const currentDate = new Date();
-
-    const daysSinceLastChange = Math.floor(
-      (currentDate - lastPasswordChange) / (1000 * 60 * 60 * 24)
+    // Check if the new password is in the password history
+    const isPasswordInHistory = await Promise.all(
+      user.passwordHistory.map(async (oldPassword) => {
+        return await bcrypt.compare(newPassword, oldPassword);
+      })
     );
 
-    if (daysSinceLastChange > passwordExpiryDays) {
+    if (isPasswordInHistory.includes(true)) {
       return res.status(400).json({
-        error: `Your password has expired. Please change your password.`,
+        error: "New password cannot be one of the recent passwords",
       });
     }
 
@@ -247,9 +252,17 @@ const updatePassword = async (req, res, next) => {
 
     // Update the user's password and set the new password change date
     user.password = hashedNewPassword;
-    user.passwordChangeDate = currentDate;
+    user.passwordChangeDate = new Date();
 
     // Save the updated user
+    await user.save();
+
+    // Update the password history
+    user.passwordHistory.push(hashedNewPassword);
+    // Trim the password history to a specific depth (e.g., last 5 passwords)
+    const passwordHistoryDepth = 5;
+    user.passwordHistory = user.passwordHistory.slice(-passwordHistoryDepth);
+
     await user.save();
 
     res.status(204).json({ message: "Password updated successfully" });

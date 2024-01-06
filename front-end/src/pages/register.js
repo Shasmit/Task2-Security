@@ -42,7 +42,7 @@ export default function Register() {
         setPassword("");
         setConfirmPassword("");
         setMessage("user created successfully");
-        window.location.href = "/";
+        window.location.href = "/login";
       })
       .catch((error) => {
         if (

@@ -110,15 +110,18 @@ export default function Login() {
               <p className="text-red-500 text-lg mt-3 moviefonts">{error}</p>
             )}
 
-            {/* <div className="text-right mt-2">
-              <a href="#" className="text-2xl font-medium text-[#305973] texts">
-                Forgot Password?
-              </a>
-            </div> */}
+            <div className="text-right mt-2">
+            <Link
+              to="/forgotPassword"
+              className="text-[#305973]  text-2xl font-medium texts"
+            >
+              Forgot Password?
+            </Link>
+            </div>
 
             <Button text="LOGIN" onClick={handleSignin} />
 
-            <button className="w-full px-4 py-3 bg-red-500 rounded-lg font-medium text-white flex items-center justify-center gap-2 mt-4" onClick={
+            <button className="w-full px-4 py-3 bg-[#F6F7D3] rounded-lg font-medium text-[#305973] flex items-center justify-center gap-2 mt-4 border border-[#305973]" onClick={
               () => {
                 navigate("/");
               }

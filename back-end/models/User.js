@@ -48,6 +48,20 @@ const userSchema = new Schema({
       type: Date,
       default: null,
     },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      default: null,
+    },
+    passwordHistory: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
 });
 
   // Sign JWT and return

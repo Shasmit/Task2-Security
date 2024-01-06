@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = require('../models/User');
 const userController = require('../controllers/user-controller');
+const passwordRecoveryController = require('../controllers/passwordRecoveryController');
 const { verifyUser } = require('../middlewares/auth');
 const upload = require('../middlewares/uploads');
 
@@ -25,6 +26,16 @@ router.put("/change-password", verifyUser, userController.updatePassword);
 
 // // Update user profile
 // router.put("/:user_id", verifyUser, userController.updateUserProfile);
+
+// Password recovery routes
+router.post(
+    "/password-recovery/request-password-reset",
+    passwordRecoveryController.requestPasswordReset
+  );
+  router.post(
+    "/password-recovery/reset-password/:token",
+    passwordRecoveryController.resetPassword
+  );
 
 
 module.exports = router;
