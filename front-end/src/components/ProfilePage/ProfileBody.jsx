@@ -183,7 +183,7 @@ export const ProfileBody = () => {
                 <>
                   <div className="relative flex flex-col items-end">
                     {
-                      user?.user[0].userType === 'admin' && (<p className="text-3xl rotate-[15deg] absolute -right-6 -top-5">👑</p>)
+                      user?.user[0].userType === 'admin' && (<p className="text-3xl rotate-[15deg] absolute -right-5 -top-4">♛</p>)
                     }
                     <p className="text-4xl texts flex items-center">
                       {userProfile?.user?.[0]?.username} {}
