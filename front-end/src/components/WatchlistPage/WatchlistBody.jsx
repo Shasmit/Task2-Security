@@ -33,7 +33,7 @@ export const WatchlistBody = ({ setActiveTab, setMovie }) => {
         { watchlist.length === 0 && (
           <div className="flex flex-col items-center justify-center">
             <h1 className="text-2xl font-semibold sidefonts text-[#305973]">
-              Your watchlist is empty
+              Your watchlist is empty 🍿
             </h1>
           </div>
         )}

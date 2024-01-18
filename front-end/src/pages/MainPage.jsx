@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Dashboard from "../components/Dashboard/Dashboard";
 import { MovieBody } from "../components/MoviePage/MovieBody";
 import { MovieDetails } from "../components/MoviePage/MovieDetails";
@@ -42,6 +42,12 @@ export default function MovieScreen() {
         return null;
     }
   };
+
+  useEffect(() => {
+    if (user?.user[0]?.userType === "admin") {
+      setActiveTab("dashboard");
+    }
+  }, [user]);
 
   return (
     <div>

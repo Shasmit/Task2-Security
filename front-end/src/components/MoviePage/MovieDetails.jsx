@@ -1,7 +1,8 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 import { CastBody } from "./CastBody";
 import ReviewBody from "./ReviewBody";
 
@@ -15,6 +16,9 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
 
   const [movieDetails, setMovieDetails] = useState([]);
   const [isWatchlisted, setIsWatchlisted] = useState(false); // New state to track watchlist status
+  const {user} = useContext(UserContext)
+
+  console.log(user?.user[0]?.userType)
 
   useEffect(() => {
     axios
@@ -191,7 +195,9 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
                 {movieDetails.data?.[0]?.movie.release_date}
               </span>
             </div>
-            <div>
+            {
+              user?.user[0]?.userType !== "admin" && (
+                <div>
               {isWatchlisted ? (
                 <FaBookmark
                   className="cursor-pointer w-5 h-5 sm:w-6 sm:h-6"
@@ -210,6 +216,8 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
               )} */}
               {/* <BiBookmark className="w-5 h-6 sm:w-6 sm:h-8" /> */}
             </div>
+              )
+            }
           </div>
           <div>
             <p className="text-justify text-[12px] sm:text-[14px] md:text-base">
@@ -314,7 +322,9 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
           ))}
         </div>
 
-        <div>
+        {
+          user?.user[0]?.userType !== "admin" && (
+            <div>
           <div className="fixed bottom-3 right-3">
             <button
               className="floating-button bg-[#08BA0C] text-white rounded-[50%] p-3 sm:p-4 md:p-6"
@@ -339,6 +349,8 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
             </button>
           </div>
         </div>
+          )
+        }
       </div>
     </>
   );

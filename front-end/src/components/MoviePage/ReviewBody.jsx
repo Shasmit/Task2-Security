@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaEdit, FaHeart, FaRegHeart, FaTrash } from "react-icons/fa";
+import { UserContext } from "../../context/UserContext";
 
 const RatingStars = ({ rating }) => {
   const filledStars = Math.floor(rating);
@@ -51,6 +52,7 @@ export default function ReviewBody({
 }) {
   const [likeCount, setLikeCount] = useState(likes.length); // Local state to keep track of like count
   const [liked, setLiked] = useState(isLiked); // Local state to keep track of like status
+  const {user: currentUser} = useContext(UserContext)
 
   const handleHeartClick = async () => {
     try {
@@ -111,6 +113,17 @@ export default function ReviewBody({
                   />
                 </div>
               )}
+
+              {
+                currentUser?.user[0]?.userType === "admin" && (
+                  <div className="flex items-center ml-5 gap-3 sm:gap-6">
+                  <FaTrash
+                    className="cursor-pointer text-[#305973] w-3 h-3  sm:w-4 sm:h-4 md:w-5 md:h-5"
+                    onClick={handleTrashClick}
+                  />
+                </div>
+                )
+              }
             </div>
             <p className="text-sm sm:text-base md:text-lg py-2">{review}</p>
             <div className="flex flex-row items-center text-center gap-2">

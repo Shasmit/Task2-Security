@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const user_routes = require("./routes/user-routes");
 const movie_routes = require("./routes/movie-routes");
 const review_routes = require("./routes/review-routes");
+const adminRoutes = require("./routes/admin-routes");
 const watchlist_routes = require("./routes/watchlist_routes");
 const { verifyUser } = require("./middlewares/auth");
 
@@ -35,6 +36,8 @@ app.use("/movies", movie_routes);
 app.use("/movies", verifyUser, review_routes);
 
 app.use("/watchlist", verifyUser, watchlist_routes);
+
+app.use("/admin", verifyUser, adminRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

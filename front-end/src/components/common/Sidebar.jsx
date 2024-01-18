@@ -98,6 +98,18 @@ export default function Sidebar({
         {/* Sidebar Content */}
         <nav className="mt-20 relative top-6 sidefonts text-lg">
           <ul className="px-3 flex flex-col gap-2">
+            {user?.user[0].userType === "admin" && (
+              <li
+                className={`cursor-pointer w-full flex gap-4 justify-start items-center px-4 py-3 text-[#305973] transition duration-400 hover:bg-[#305973] hover:text-white rounded-xl ${
+                  activeTab === "dashboard" ? "bg-[#305973] text-white" : ""
+                }`}
+                onClick={() => onTabChange("dashboard")}
+              >
+                <BiSolidDashboard className="w-8 h-8" />
+                <p>Dashboard</p>
+              </li>
+            )}
+
             <li
               className={`cursor-pointer w-full flex gap-4 justify-start items-center px-4 py-3 text-[#305973] transition duration-400 hover:bg-[#305973] hover:text-white rounded-xl ${
                 activeTab === "movies" ? "bg-[#305973] text-white" : ""
@@ -127,18 +139,6 @@ export default function Sidebar({
               >
                 <BiBookmark className="w-8 h-8" />
                 <p>Watchlist</p>
-              </li>
-            )}
-
-            {user?.user[0].userType === "admin" && (
-              <li
-                className={`cursor-pointer w-full flex gap-4 justify-start items-center px-4 py-3 text-[#305973] transition duration-400 hover:bg-[#305973] hover:text-white rounded-xl ${
-                  activeTab === "dashboard" ? "bg-[#305973] text-white" : ""
-                }`}
-                onClick={() => onTabChange("dashboard")}
-              >
-                <BiSolidDashboard className="w-8 h-8" />
-                <p>Dashboard</p>
               </li>
             )}
           </ul>
