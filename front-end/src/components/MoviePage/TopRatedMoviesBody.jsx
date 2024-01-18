@@ -9,10 +9,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { UserContext } from "../../context/UserContext";
 import "./otherStyles.css";
 
-export const TopRatedMoviesBody = ({setActiveTab, setMovie}) => {
+export const TopRatedMoviesBody = ({ setActiveTab, setMovie }) => {
   const [slidesPerView, setSlidesPerView] = useState(6);
   const [hoveredSlide, setHoveredSlide] = useState(null);
-  const {user} = useContext(UserContext)
+  const { user } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -24,8 +24,7 @@ export const TopRatedMoviesBody = ({setActiveTab, setMovie}) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/movies/top_rated/", {
-      })
+      .get("http://localhost:3001/movies/top_rated/", {})
       .then((response) => {
         setTopRatedMovies(response.data.results);
       })
@@ -67,42 +66,52 @@ export const TopRatedMoviesBody = ({setActiveTab, setMovie}) => {
 
   return (
     <div className="h-[15vh] sm:h-[25vh]">
-      <Swiper
-        slidesPerView={slidesPerView}
-        centeredSlides={false}
-        spaceBetween={25}
-        navigation={true}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {topRatedMovies.map((topRatedMovie, index) => (
-          <SwiperSlide
-            key={index}
-            className="flex flex-col cursor-pointer"
-            onMouseEnter={() => handleSlideMouseEnter(index)}
-            onMouseLeave={handleSlideMouseLeave}
-            onClick={
-              () => {
+      {topRatedMovies && topRatedMovies.length > 0 ? ( // Add conditional check
+        <Swiper
+          slidesPerView={slidesPerView}
+          centeredSlides={false}
+          spaceBetween={25}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          className="mySwiper"
+        >
+          {topRatedMovies.map((topRatedMovie, index) => (
+            <SwiperSlide
+              key={index}
+              className="flex flex-col cursor-pointer"
+              onMouseEnter={() => handleSlideMouseEnter(index)}
+              onMouseLeave={handleSlideMouseLeave}
+              onClick={() => {
                 if (user) {
                   setActiveTab("movie details");
-                setMovie(topRatedMovie);
+                  setMovie(topRatedMovie);
                 } else {
-                  navigate('/please-login')
+                  navigate("/please-login");
                 }
-              }
-            }
-          >
-            <img src={`https://image.tmdb.org/t/p/w500/${topRatedMovie.backdrop_path}`}  alt={topRatedMovie.text} className="bg-center" />
-            <div
-              className={`absolute bg-[#0000009a] top-0 w-full h-full rounded-[10px] flex items-center justify-center text-white transition-opacity duration-300 ${
-                hoveredSlide === index ? "opacity-100" : "opacity-0"
-              }`}
+              }}
             >
-              <p className="text-center px-2 poppins font-medium text-[10px] sm:text-[14px]">{topRatedMovie.title}</p>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+              <img
+                src={`https://image.tmdb.org/t/p/w500/${topRatedMovie.backdrop_path}`}
+                alt={topRatedMovie.text}
+                className="bg-center"
+              />
+              <div
+                className={`absolute bg-[#0000009a] top-0 w-full h-full rounded-[10px] flex items-center justify-center text-white transition-opacity duration-300 ${
+                  hoveredSlide === index ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <p className="text-center px-2 poppins font-medium text-[10px] sm:text-[14px]">
+                  {topRatedMovie.title}
+                </p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        <div className="flex justify-center w-full">
+          <div className="loader ease-linear rounded-full border-t-8 border-[#305973] h-32 w-32 animate-spin"></div>
+        </div>
+      )}
     </div>
   );
 };

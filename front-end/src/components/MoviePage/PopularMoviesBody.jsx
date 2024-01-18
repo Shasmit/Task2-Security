@@ -9,24 +9,22 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { UserContext } from "../../context/UserContext";
 import "./otherStyles.css";
 
-export const PopularMoviesBody = ({setActiveTab, setMovieId, setMovie}) => {
+export const PopularMoviesBody = ({ setActiveTab, setMovieId, setMovie }) => {
   const [slidesPerView, setSlidesPerView] = useState(6);
   const [hoveredSlide, setHoveredSlide] = useState(null);
 
   const [popularMovies, setPopularMovies] = useState([]);
-  const {user} = useContext(UserContext)
+  const { user } = useContext(UserContext);
 
   // const handleMovieDetailsClick = ({}) => {
   //   setMovieId(popularMovies[hoveredSlide].id);
   //   setActiveTab("movie details");
   // };
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/movies/popular/", {
-      })
+      .get("http://localhost:3001/movies/popular/", {})
       .then((response) => {
         setPopularMovies(response.data.results);
       })
@@ -68,42 +66,52 @@ export const PopularMoviesBody = ({setActiveTab, setMovieId, setMovie}) => {
 
   return (
     <div className="h-[15vh] sm:h-[25vh]">
-      <Swiper
-        slidesPerView={slidesPerView}
-        centeredSlides={false}
-        spaceBetween={25}
-        navigation={true}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {popularMovies.map((popularMovie, index) => (
-          <SwiperSlide
-            key={index}
-            className="flex flex-col cursor-pointer"
-            onMouseEnter={() => handleSlideMouseEnter(index)}
-            onMouseLeave={handleSlideMouseLeave}
-            onClick={
-              () => {
+      {popularMovies && popularMovies.length > 0 ? ( // Add conditional check
+        <Swiper
+          slidesPerView={slidesPerView}
+          centeredSlides={false}
+          spaceBetween={25}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          className="mySwiper"
+        >
+          {popularMovies.map((popularMovie, index) => (
+            <SwiperSlide
+              key={index}
+              className="flex flex-col cursor-pointer"
+              onMouseEnter={() => handleSlideMouseEnter(index)}
+              onMouseLeave={handleSlideMouseLeave}
+              onClick={() => {
                 if (user) {
                   setActiveTab("movie details");
-                setMovie(popularMovie);
+                  setMovie(popularMovie);
                 } else {
-                  navigate('/please-login')
+                  navigate("/please-login");
                 }
-              }
-            }
-          >
-            <img src={`https://image.tmdb.org/t/p/w500/${popularMovie.backdrop_path}`}  alt={popularMovie.text} className="bg-center" />
-            <div
-              className={`absolute bg-[#0000009a] top-0 w-full h-full rounded-[10px] flex items-center justify-center text-white transition-opacity duration-300 ${
-                hoveredSlide === index ? "opacity-100" : "opacity-0"
-              }`}
+              }}
             >
-              <p className="text-center px-2 poppins font-medium text-[14px]">{popularMovie.title}</p>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+              <img
+                src={`https://image.tmdb.org/t/p/w500/${popularMovie.backdrop_path}`}
+                alt={popularMovie.text}
+                className="bg-center"
+              />
+              <div
+                className={`absolute bg-[#0000009a] top-0 w-full h-full rounded-[10px] flex items-center justify-center text-white transition-opacity duration-300 ${
+                  hoveredSlide === index ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <p className="text-center px-2 poppins font-medium text-[14px]">
+                  {popularMovie.title}
+                </p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        <div className="flex justify-center w-full">
+          <div className="loader ease-linear rounded-full border-t-8 border-[#305973] h-32 w-32 animate-spin"></div>
+        </div>
+      )}
     </div>
   );
 };
