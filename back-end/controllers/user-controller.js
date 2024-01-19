@@ -5,18 +5,15 @@ const User = require("../models/User");
 
 const registerUser = (req, res, next) => {
   const { username, password, email, confirmPassword } = req.body;
-
   // Check if all required fields are filled
   if (!username || !password || !email || !confirmPassword) {
     return res.status(400).json({ error: "All fields are required" });
   }
-
   // Email Validation: Check if the email is in a valid format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: "Invalid email format" });
   }
-
   // Password Complexity: Require passwords to include a combination of Uppercase letters, Lowercase letters, Numbers, Special characters
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
@@ -26,7 +23,6 @@ const registerUser = (req, res, next) => {
         "Password must include combination of: Uppercase letters, Lowercase letters, Numbers, Special characters (e.g.,!, @, #, $)",
     });
   }
-
   const minPasswordLength = 8;
   if (password.length < minPasswordLength) {
     return res.status(400).json({
@@ -124,10 +120,9 @@ const loginUser = async (req, res, next) => {
           .status(400)
           .json({ error: "Account is locked. Please try again later." });
       }
-
       // Save the updated user data
       await user.save();
-
+      
       return res.status(400).json({ error: "Invalid password" });
     }
 
