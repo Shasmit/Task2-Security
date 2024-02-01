@@ -24,7 +24,7 @@ export const TopRatedMoviesBody = ({ setActiveTab, setMovie }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/movies/top_rated/", {})
+      .get("https://localhost:3001/movies/top_rated/", {})
       .then((response) => {
         setTopRatedMovies(response.data.results);
       })

@@ -22,7 +22,7 @@ export default function ChangePassword() {
 
     try {
       const response = await axios.put(
-        `http://localhost:3001/users/change-password`,
+        `https://localhost:3001/users/change-password`,
         {
           currentPassword,
           newPassword,

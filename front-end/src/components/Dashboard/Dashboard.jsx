@@ -15,7 +15,7 @@ const Dashboard = () => {
     const fetchDashboardSummary = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/admin/dashboard-summary",
+          "https://localhost:3001/admin/dashboard-summary",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -36,7 +36,7 @@ const Dashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/admin/users", {
+      const response = await axios.get("https://localhost:3001/admin/users", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -52,7 +52,7 @@ const Dashboard = () => {
     const fetchDashboardSummary = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/admin/dashboard-summary",
+          "https://localhost:3001/admin/dashboard-summary",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -72,7 +72,7 @@ const Dashboard = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`http://localhost:3001/admin/users/${userId}`, {
+      await axios.delete(`https://localhost:3001/admin/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

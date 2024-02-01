@@ -10,7 +10,7 @@ export default function AllReviews() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/movies/${movieDetails.id}/reviews`, {
+      .get(`https://localhost:3001/movies/${movieDetails.id}/reviews`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -27,8 +27,8 @@ export default function AllReviews() {
   const handleLikeUnlikeReview = async (reviewID, isLiked) => {
     try {
       const url = isLiked
-        ? `http://localhost:3001/movies/${movieDetails.id}/reviews/${reviewID}/unlike`
-        : `http://localhost:3001/movies/${movieDetails.id}/reviews/${reviewID}/like`;
+        ? `https://localhost:3001/movies/${movieDetails.id}/reviews/${reviewID}/unlike`
+        : `https://localhost:3001/movies/${movieDetails.id}/reviews/${reviewID}/like`;
 
       await axios.post(
         url,
@@ -42,7 +42,7 @@ export default function AllReviews() {
 
       // Fetch the updated reviews and set them in the component state
       const updatedReviewsResponse = await axios.get(
-        `http://localhost:3001/movies/${movieDetails.id}/reviews`,
+        `https://localhost:3001/movies/${movieDetails.id}/reviews`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -66,7 +66,7 @@ export default function AllReviews() {
             }}
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               className="w-6 h-6"
               fill="none"
               viewBox="0 0 24 24"

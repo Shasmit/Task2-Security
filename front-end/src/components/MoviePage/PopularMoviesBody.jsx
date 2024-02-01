@@ -24,7 +24,7 @@ export const PopularMoviesBody = ({ setActiveTab, setMovieId, setMovie }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/movies/popular/", {})
+      .get("https://localhost:3001/movies/popular/", {})
       .then((response) => {
         setPopularMovies(response.data.results);
       })

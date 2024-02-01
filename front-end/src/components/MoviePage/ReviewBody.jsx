@@ -22,7 +22,7 @@ const RatingStars = ({ rating }) => {
       {stars.map((star, index) => (
         <svg
           key={index}
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
           fill={star ? "#34D399" : "#D1D5DB"}
           viewBox="0 0 24 24"
           className="w-[12px] h-[12px] sm:w-[14px] sm:h-[14px] md:h-4 md:w-4"
@@ -88,7 +88,7 @@ export default function ReviewBody({
             src={
               user.image == null
                 ? "https://img.freepik.com/free-icon/user_318-159711.jpg"
-                : `http://localhost:3001/uploads/${user.image}`
+                : `https://localhost:3001/uploads/${user.image}`
             }
             alt=""
             className="h-[40px] w-[40px] sm:h-[60px] sm:w-[60px] md:h-[80px] md:w-[80px] object-cover rounded-[50%]"

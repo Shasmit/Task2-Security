@@ -7,7 +7,7 @@ export const WatchlistBody = ({ setActiveTab, setMovie }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/watchlist", {
+      .get("https://localhost:3001/watchlist", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

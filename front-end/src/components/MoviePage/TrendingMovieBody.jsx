@@ -27,7 +27,7 @@ const TrendingMoviesBody = ({
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/movies/trending/", {
+      .get("https://localhost:3001/movies/trending/", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

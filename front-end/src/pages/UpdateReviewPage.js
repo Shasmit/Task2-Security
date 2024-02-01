@@ -16,7 +16,7 @@ const UpdateReviewPage = () => {
     const fetchReviewData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/movies/${movieDetails.id}/reviews/${reviewID}`,
+          `https://localhost:3001/movies/${movieDetails.id}/reviews/${reviewID}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -51,7 +51,7 @@ const UpdateReviewPage = () => {
       };
 
       await axios.put(
-        `http://localhost:3001/movies/${movieDetails.id}/reviews/${reviewID}`,
+        `https://localhost:3001/movies/${movieDetails.id}/reviews/${reviewID}`,
         reviewData,
         {
           headers: {
@@ -76,7 +76,7 @@ const UpdateReviewPage = () => {
           }}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
             className="w-6 h-6"
             fill="none"
             viewBox="0 0 24 24"
@@ -111,7 +111,7 @@ const UpdateReviewPage = () => {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="https://www.w3.org/2000/svg"
                 onClick={() => handleRatingClick(star)}
               >
                 <path
@@ -148,7 +148,7 @@ const UpdateReviewPage = () => {
           onClick={handleSubmit}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
             className="w-6 h-6 sm:w-8 sm:h-8 md:h-10 md:w-10"
             viewBox="0 0 24 24"
           >

@@ -24,7 +24,7 @@ export default function Sidebar({
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/users", {
+      .get("https://localhost:3001/users", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -42,7 +42,7 @@ export default function Sidebar({
       {/* Hamburger Button */}
       <button className="fixed z-10 top-3 left-2 p-2" onClick={toggleSidebar}>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="https://www.w3.org/2000/svg"
           width="40"
           height="40"
           viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ export default function Sidebar({
         {/* Close Button */}
         <button className="absolute top-5 right-0 p-2" onClick={toggleSidebar}>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="https://www.w3.org/2000/svg"
             width="40"
             height="40"
             viewBox="0 0 24 24"
@@ -158,7 +158,7 @@ export default function Sidebar({
             src={
               userProfile?.user?.[0]?.image == null
                 ? "https://img.freepik.com/free-icon/user_318-159711.jpg"
-                : `http://localhost:3001/uploads/${userProfile?.user?.[0]?.image}`
+                : `https://localhost:3001/uploads/${userProfile?.user?.[0]?.image}`
             }
             alt=""
             className="w-[50px] h-[50px] rounded-full object-cover"

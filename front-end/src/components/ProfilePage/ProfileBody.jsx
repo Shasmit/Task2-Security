@@ -31,7 +31,7 @@ export const ProfileBody = () => {
       };
 
       const response = await axios.put(
-        "http://localhost:3001/users/edit-profile",
+        "https://localhost:3001/users/edit-profile",
         updatedProfile,
         {
           headers: {
@@ -54,7 +54,7 @@ export const ProfileBody = () => {
   };
   const fetchUserProfile = () => {
     axios
-      .get("http://localhost:3001/users", {
+      .get("https://localhost:3001/users", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -100,7 +100,7 @@ export const ProfileBody = () => {
       const formData = new FormData();
       formData.append("profilePicture", selectedImage);
 
-      await axios.post("http://localhost:3001/users/uploadImage", formData, {
+      await axios.post("https://localhost:3001/users/uploadImage", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",
@@ -139,7 +139,7 @@ export const ProfileBody = () => {
                 src={
                   userProfile?.user?.[0]?.image == null
                     ? "https://img.freepik.com/free-icon/user_318-159711.jpg"
-                    : `http://localhost:3001/uploads/${userProfile?.user?.[0]?.image}`
+                    : `https://localhost:3001/uploads/${userProfile?.user?.[0]?.image}`
                 }
                 alt="user-profile-image"
                 className="h-[120px] w-[120px] rounded-[50%] object-cover"
@@ -237,7 +237,7 @@ export const ProfileBody = () => {
               >
                 <span className="sr-only">Close</span>
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://www.w3.org/2000/svg"
                   className="h-4 w-4"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -262,7 +262,7 @@ export const ProfileBody = () => {
               >
                 <span className="sr-only">Close</span>
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://www.w3.org/2000/svg"
                   className="h-4 w-4"
                   viewBox="0 0 20 20"
                   fill="currentColor"

@@ -22,7 +22,7 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/movies/${movie.id}`, {
+      .get(`https://localhost:3001/movies/${movie.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -43,7 +43,7 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
     try {
       if (isWatchlisted) {
         // Remove from watchlist
-        await axios.delete(`http://localhost:3001/watchlist/${movie.id}`, {
+        await axios.delete(`https://localhost:3001/watchlist/${movie.id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -52,7 +52,7 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
       } else {
         // Add to watchlist
         await axios.post(
-          `http://localhost:3001/watchlist/${movie.id}`,
+          `https://localhost:3001/watchlist/${movie.id}`,
           {},
           {
             headers: {
@@ -72,8 +72,8 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
     console.log(reviewID);
     try {
       const url = isLiked
-        ? `http://localhost:3001/movies/${movieId}/reviews/${reviewID}/unlike`
-        : `http://localhost:3001/movies/${movieId}/reviews/${reviewID}/like`;
+        ? `https://localhost:3001/movies/${movieId}/reviews/${reviewID}/unlike`
+        : `https://localhost:3001/movies/${movieId}/reviews/${reviewID}/like`;
 
       await axios.post(
         url,
@@ -131,7 +131,7 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
   const handleDeleteReview = async (reviewID) => {
     try {
       await axios.delete(
-        `http://localhost:3001/movies/${movieId}/reviews/${reviewID}`,
+        `https://localhost:3001/movies/${movieId}/reviews/${reviewID}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -334,7 +334,7 @@ export const MovieDetails = ({ movieId, movie, setActiveTab, setMovie }) => {
                 }}
               >
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://www.w3.org/2000/svg"
                   className="w-4 h-4 sm:w-5 sm:h-5 md:h-6 md:w-6"
                   viewBox="0 0 24 24"
                 >
