@@ -8,7 +8,10 @@ const review_routes = require("./routes/review-routes");
 const adminRoutes = require("./routes/admin-routes");
 const watchlist_routes = require("./routes/watchlist_routes");
 const { verifyUser } = require("./middlewares/auth");
-
+const morgan = require("morgan");
+const path = require("path");
+const fs = require("fs");
+const rfs = require("rotating-file-stream");
 
 const MONGODB_URI =
   process.env.NODE_ENV === "test"
@@ -28,6 +31,20 @@ app.use(cors());
 
 app.use(express.json());
 app.use(express.static("public"));
+
+// ensure the log directory exists
+const logDirectory = path.join(__dirname, "logs");
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+ 
+// create a rotating write stream
+const accessLogStream = rfs.createStream("access.log", {
+  interval: "1d", // rotate daily
+  path: logDirectory,
+});
+
+// use morgan middleware with the rotating file streat for logging
+app.use(morgan("combined", { stream: accessLogStream }));
+
 
 app.use("/users", user_routes);
 

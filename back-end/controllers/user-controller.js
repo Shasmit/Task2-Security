@@ -101,7 +101,35 @@ const loginUser = async (req, res, next) => {
           error: `Account is locked. Please try again later after ${minutes} minutes and ${seconds} seconds.`,
         });
       }
+      
     }
+    
+    const checkPasswordExpiry = (user) => {
+      const passwordExpiryDays = 90; // Set the password expiry duration in days
+      const currentDate = new Date();
+      const lastPasswordChangeDate = user.passwordChangeDate || user.createdAt;
+    
+      const daysSinceLastChange = Math.floor(
+        (currentDate - lastPasswordChangeDate) / (1000 * 60 * 60 * 24)
+      );
+    
+      const daysRemaining = passwordExpiryDays - daysSinceLastChange;
+    
+      if (daysRemaining <= 3 && daysRemaining > 0) {
+        const message = `Your password will expire in ${daysRemaining} days. Please change your password.`;
+        return {
+          expired: false,
+          daysRemaining: daysRemaining,
+          message: message,
+        };
+      }
+    
+      return {
+        expired: daysSinceLastChange >= passwordExpiryDays,
+        daysRemaining: daysRemaining,
+        message: null,
+      };
+    };
     
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
